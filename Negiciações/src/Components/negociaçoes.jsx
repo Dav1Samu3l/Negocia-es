@@ -4,8 +4,40 @@ import { IoTrashBinOutline } from 'react-icons/io5';
 import { Alert } from 'react-bootstrap';
 import './Neggociaçoes.css';
 
+function NegociacoesHeader() {
+  return (
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Quantidade</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+  );
+}
 
-function Negociacoes(prop) {
+function NegociacoesList({ negociacoes, handleDeleteNegociacao }) {
+  const date = new Date();
+  const formattedDate = format(date, 'dd/MM/yyyy');
+
+  return (
+    <tbody>
+      {negociacoes.map((negociacao, index) => (
+        <tr key={index}>
+          <td>{formattedDate}</td>
+          <td>{negociacao.quantidade}</td>
+          <td>{negociacao.valor}</td>
+          <IoTrashBinOutline
+            onClick={() => handleDeleteNegociacao(negociacao)}
+            className="delete-icon"
+          />
+        </tr>
+      ))}
+    </tbody>
+  );
+}
+
+function Negociacoes() {
   const [negociacoes, setNegociacoes] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
 
@@ -30,9 +62,6 @@ function Negociacoes(prop) {
     const novasNegociacoes = negociacoes.filter(negociacao => negociacao !== negociacaoParaRemover);
     setNegociacoes(novasNegociacoes);
   }
-
-  const date = new Date();
-  const formattedDate = format(date, 'dd/MM/yyyy');
 
   function handleCloseAlert() {
     setShowAlert(false);
@@ -61,26 +90,8 @@ function Negociacoes(prop) {
         </Alert>
       )}
       <table id='tabela'>
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Quantidade</th>
-            <th>Valor</th>
-          </tr>
-        </thead>
-        <tbody>
-          {negociacoes.map((negociacao, index) => (
-            <tr key={index}>
-              <td>{formattedDate}</td>
-              <td>{negociacao.quantidade}</td>
-              <td>{negociacao.valor}</td>
-              <IoTrashBinOutline
-                onClick={() => handleDeleteNegociacao(negociacao)}
-                className="delete-icon"
-              />
-            </tr>
-          ))}
-        </tbody>
+        <NegociacoesHeader />
+        <NegociacoesList negociacoes={negociacoes} handleDeleteNegociacao={handleDeleteNegociacao} />
       </table>
     </div>
   );

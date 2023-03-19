@@ -11,7 +11,7 @@ function App() {
 
     <div>
       <h1>Minhas Negociações</h1>
-      <br/>
+      <br />
       <Negociacoes className="container" />
     </div>
 
