@@ -1,27 +1,43 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
+import { IoTrashBinOutline } from 'react-icons/io5';
+import { Alert } from 'react-bootstrap';
+import './Neggociaçoes.css';
 
-function Negociacoes() {
+
+function Negociacoes(prop) {
   const [negociacoes, setNegociacoes] = useState([]);
+  const [showAlert, setShowAlert] = useState(false);
 
   function handleNegociacaoSubmit(event) {
     event.preventDefault();
     const [data, quantidade, valor] = event.target.elements;
 
-
     if (!data.value || !quantidade.value || !valor.value) {
-      alert('Por favor, preencha todos os campos!');
+      setShowAlert(true);
       return;
     }
 
     const negociacao = {
-      data: new Date( data.value),
+      data: new Date(data.value),
       quantidade: quantidade.value,
       valor: valor.value,
     };
     setNegociacoes([...negociacoes, negociacao]);
   }
 
+  function handleDeleteNegociacao(negociacaoParaRemover) {
+    const novasNegociacoes = negociacoes.filter(negociacao => negociacao !== negociacaoParaRemover);
+    setNegociacoes(novasNegociacoes);
+  }
+
+  const date = new Date();
+  const formattedDate = format(date, 'dd/MM/yyyy');
+
+  function handleCloseAlert() {
+    setShowAlert(false);
+  }
+  
   return (
     <div>
       <form onSubmit={handleNegociacaoSubmit}>
@@ -39,7 +55,12 @@ function Negociacoes() {
         </label>
         <button type="submit">Adicionar Negociação</button>
       </form>
-      <table>
+      {showAlert && (
+        <Alert variant="danger" onClose={handleCloseAlert} dismissible>
+          Preencha todos os campos antes de adicionar uma negociação.
+        </Alert>
+      )}
+      <table id='tabela'>
         <thead>
           <tr>
             <th>Data</th>
@@ -48,11 +69,15 @@ function Negociacoes() {
           </tr>
         </thead>
         <tbody>
-          {negociacoes.map((negociacao) => (
-            <tr  key={negociacao.data}>
-              <td>{ format(negociacao.data, 'dd/MM/yyyy')}</td>
+          {negociacoes.map((negociacao, index) => (
+            <tr key={index}>
+              <td>{formattedDate}</td>
               <td>{negociacao.quantidade}</td>
               <td>{negociacao.valor}</td>
+              <IoTrashBinOutline
+                onClick={() => handleDeleteNegociacao(negociacao)}
+                className="delete-icon"
+              />
             </tr>
           ))}
         </tbody>
@@ -62,13 +87,3 @@ function Negociacoes() {
 }
 
 export default Negociacoes;
-
-
-      {/* <ul>
-        {negociacoes.map((negociacao) => (
-          <li>
-            Data: {negociacao.data}, Quantidade: {negociacao.quantidade}, Valor:{' '}
-            {negociacao.valor}
-          </li>
-        ))}
-      </ul> */}

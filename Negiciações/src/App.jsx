@@ -1,17 +1,20 @@
 import React from 'react';
 import Negociacoes from './Components/negociaçoes';
+import './App.css';
+
 
 function App() {
 
 
   return (
-    <div class="container">
-  
-      <div className="container">
-        <h1>Minhas Negociações</h1>
-        <Negociacoes />
-      </div>
+
+
+    <div>
+      <h1>Minhas Negociações</h1>
+      <br/>
+      <Negociacoes className="container" />
     </div>
+
 
   );
 }
